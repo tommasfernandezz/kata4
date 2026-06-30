@@ -6,9 +6,9 @@ import software.ulpgc.kata4.architecture.MovieLoader;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Stream;
 import java.util.zip.GZIPInputStream;
 
 public class RemoteStore implements MovieLoader {
@@ -20,7 +20,7 @@ public class RemoteStore implements MovieLoader {
     }
 
     @Override
-    public List<Movie> loadAll() {
+    public Stream<Movie> loadAll() {
         try {
             return loadFrom(new URL("https://datasets.imdbws.com/title.basics.tsv.gz"));
         } catch (IOException e) {
@@ -28,33 +28,28 @@ public class RemoteStore implements MovieLoader {
         }
     }
 
-    private List<Movie> loadFrom(URL url) throws IOException {
+    private Stream<Movie> loadFrom(URL url) throws IOException {
         return loadFrom(url.openConnection());
     }
 
-    private List<Movie> loadFrom(URLConnection connection) throws IOException {
-        try (InputStream inputStream = connection.getInputStream()) {
-            return loadFrom(unzip(inputStream));
+    private Stream<Movie> loadFrom(URLConnection connection) throws IOException {
+        return streamIn(unzip(connection.getInputStream()));
+    }
+
+    private Stream<Movie> streamIn(InputStream inputStream) {
+        return streamIn(toReader(inputStream)).onClose(() -> close(inputStream));
+    }
+
+    private Stream<Movie> streamIn(BufferedReader reader) {
+        return reader.lines().skip(1).map(deserialize);
+    }
+
+    private void close(InputStream inputStream) {
+        try {
+            inputStream.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-    }
-
-    private List<Movie> loadFrom(InputStream inputStream) throws IOException {
-        return loadFrom(toReader(inputStream));
-    }
-
-    private List<Movie> loadFrom(BufferedReader reader) throws IOException {
-        ArrayList<Movie> movies = new ArrayList<>();
-        reader.readLine();
-        while (true) {
-            String line = reader.readLine();
-            if (line == null) break;
-            movies.add(toMovie(line));
-        }
-        return movies;
-    }
-
-    private Movie toMovie(String line) {
-        return deserialize.apply(line);
     }
 
     private BufferedReader toReader(InputStream inputStream) {

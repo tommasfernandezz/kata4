@@ -1,7 +1,7 @@
 package software.ulpgc.kata4.architecture;
 
-import java.util.List;
+import java.util.stream.Stream;
 
 public interface MovieLoader {
-    List<Movie> loadAll();
+    Stream<Movie> loadAll();
 }

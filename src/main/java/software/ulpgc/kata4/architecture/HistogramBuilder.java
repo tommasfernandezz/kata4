@@ -1,4 +1,4 @@
-package software.ulpgc.kata3.architecture;
+package software.ulpgc.kata4.architecture;
 
 import java.util.List;
 import java.util.function.Function;

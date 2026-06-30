@@ -1,14 +1,14 @@
-package software.ulpgc.kata3.app;
+package software.ulpgc.kata4.app;
 
-import software.ulpgc.kata3.architecture.Histogram;
-import software.ulpgc.kata3.architecture.HistogramBuilder;
-import software.ulpgc.kata3.architecture.Movie;
+import software.ulpgc.kata4.architecture.Histogram;
+import software.ulpgc.kata4.architecture.HistogramBuilder;
+import software.ulpgc.kata4.architecture.Movie;
 
 import java.util.List;
 
 public class Main {
     static void main() {
-        List<Movie> movies = new RemoteMovieLoader(Main :: fromTsv).loadAll();
+        List<Movie> movies = new RemoteStore(Main :: fromTsv).loadAll();
         Histogram histogram = new HistogramBuilder(movies).build(m -> (m.year() / 10) * 10);
         for (int bin: histogram) System.out.println(bin + ": " + histogram.count(bin));
     }

@@ -1,7 +1,7 @@
-package software.ulpgc.kata3.app;
+package software.ulpgc.kata4.app;
 
-import software.ulpgc.kata3.architecture.Movie;
-import software.ulpgc.kata3.architecture.MovieLoader;
+import software.ulpgc.kata4.architecture.Movie;
+import software.ulpgc.kata4.architecture.MovieLoader;
 
 import java.io.*;
 import java.net.URL;
@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.zip.GZIPInputStream;
 
-public class RemoteMovieLoader implements MovieLoader {
+public class RemoteStore implements MovieLoader {
 
     private final Function<String, Movie> deserialize;
 
-    public RemoteMovieLoader(Function<String, Movie> deserialize) {
+    public RemoteStore(Function<String, Movie> deserialize) {
         this.deserialize = deserialize;
     }
 

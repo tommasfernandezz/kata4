@@ -1,4 +1,7 @@
-package software.ulpgc.kata3;
+package software.ulpgc.kata3.app;
+
+import software.ulpgc.kata3.architecture.Movie;
+import software.ulpgc.kata3.architecture.MovieLoader;
 
 import java.io.*;
 import java.net.URL;
